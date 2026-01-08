@@ -47,6 +47,15 @@ namespace Tarefas.API.Aplication
             return ResponseModel<Tarefa>.Sucess(tarefaInativada, "A tarefa foi inativada com sucesso.");
         }
 
+        public async Task<ResponseModel<Tarefa>> ConsultarTarefaPorId(int idTarefa)
+        {
+            var tarefa = await _context.Tarefas.FindAsync(idTarefa);
+            if (tarefa != null)
+                return ResponseModel<Tarefa>.Erro($"Não foi encontrado nenhuma tarefa com este Id {idTarefa}");
+
+            return ResponseModel<Tarefa>.Sucess(tarefa, "Tarefa encontrada com sucesso.");
+        }
+
         public async Task<ResponseModel<Tarefa>> AtivaTarefa(int idTarefa)
         {
             var tarefaAtivada = await _context.Tarefas.FindAsync(idTarefa);

@@ -10,5 +10,6 @@ namespace Tarefas.API.Interface
         Task<ResponseModel<Tarefa>> InativaTarefa(int idTarefa);
         Task<ResponseModel<Tarefa>> AtivaTarefa(int idTarefa);
         Task<ResponseModel<List<Tarefa>>> FiltrarTarefasAsync(TarefaFiltroDTO dto);
+        Task<ResponseModel<Tarefa>> ConsultarTarefaPorId(int idTarefa);
     }
 }
