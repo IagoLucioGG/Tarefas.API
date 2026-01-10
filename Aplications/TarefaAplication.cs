@@ -3,6 +3,7 @@ using Tarefas.API.Domain;
 using Tarefas.API.DTO;
 using Tarefas.API.Interface;
 using Microsoft.EntityFrameworkCore;
+using Tarefas.API.Exceptions;
 
 namespace Tarefas.API.Aplication
 {
@@ -12,7 +13,7 @@ namespace Tarefas.API.Aplication
 
         public async Task<ResponseModel<Tarefa>> CadastraTarefaAsync(CriarTarefaRequestDTO dto)
         {
-            var novaTarefa = new Tarefa(dto.DescTarefa, dto.Observacao, dto.DataParaExecucao, dto.DataExecutada, dto.Tipo, dto.QtVezesParaExecucaoPeriodo, dto.Periodo);
+            var novaTarefa = new Tarefa(dto.DescTarefa, dto.Observacao ?? "", dto.DataParaExecucao, dto.DataExecutada, dto.Tipo, dto.QtVezesParaExecucaoPeriodo, dto.Periodo);
 
             await _context.Tarefas.AddAsync(novaTarefa);
             _context.SaveChanges();
@@ -24,7 +25,7 @@ namespace Tarefas.API.Aplication
         {
             var tarefaExecutada = await _context.Tarefas.FindAsync(idTarefa);
             if (tarefaExecutada == null)
-                return ResponseModel<Tarefa>.Erro($"Não existe tarefa no banco de dados referente este ID {idTarefa}");
+                throw new NotFoundException($"Não existe tarefa no banco de dados referente este ID {idTarefa}");
 
             tarefaExecutada.ExecutarTarefa();
 
@@ -38,7 +39,7 @@ namespace Tarefas.API.Aplication
         {
             var tarefaInativada = await _context.Tarefas.FindAsync(idTarefa);
             if (tarefaInativada == null)
-                return ResponseModel<Tarefa>.Erro($"Não existe tarefa no banco de dados referente este ID {idTarefa}");
+                throw new NotFoundException($"Não existe tarefa no banco de dados referente este ID {idTarefa}");
 
             tarefaInativada.InativaTarefa();
 
@@ -50,8 +51,8 @@ namespace Tarefas.API.Aplication
         public async Task<ResponseModel<Tarefa>> ConsultarTarefaPorId(int idTarefa)
         {
             var tarefa = await _context.Tarefas.FindAsync(idTarefa);
-            if (tarefa != null)
-                return ResponseModel<Tarefa>.Erro($"Não foi encontrado nenhuma tarefa com este Id {idTarefa}");
+            if (tarefa == null)
+                throw new NotFoundException($"Não foi encontrado nenhuma tarefa com este Id {idTarefa}");
 
             return ResponseModel<Tarefa>.Sucess(tarefa, "Tarefa encontrada com sucesso.");
         }
@@ -60,7 +61,7 @@ namespace Tarefas.API.Aplication
         {
             var tarefaAtivada = await _context.Tarefas.FindAsync(idTarefa);
             if (tarefaAtivada == null)
-                return ResponseModel<Tarefa>.Erro($"Não existe tarefa no banco de dados referente este ID {idTarefa}");
+                throw new NotFoundException($"Não existe tarefa no banco de dados referente este ID {idTarefa}");
 
             tarefaAtivada.AtivaTarefa();
 
@@ -98,7 +99,7 @@ namespace Tarefas.API.Aplication
 
             var tarefas = await query.ToListAsync();
 
-            return ResponseModel<List<Tarefa>>.Sucess(tarefas, "Tarefas encontradas com sucesso.");
+            return ResponseModel<List<Tarefa>>.Sucess(tarefas, "Tarefas filtradas com sucesso.");
         }
     }
 }
