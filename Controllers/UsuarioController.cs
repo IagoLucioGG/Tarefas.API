@@ -3,10 +3,10 @@ using Microsoft.AspNetCore.Mvc;
 using Tarefas.API.DTO;
 using Tarefas.API.Interface;
 
-namespace Tarefas.API.Controller
+namespace Tarefas.API.Controllers
 {
     [ApiController]
-    [Route("api/{controller}")]
+    [Route("api/v1/[controller]")]
     public class UsuarioController : ControllerBase
     {
         private readonly IUsuarioAplication _usuarioApp;

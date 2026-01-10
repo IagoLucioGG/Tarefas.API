@@ -7,11 +7,11 @@ namespace Tarefas.API.Domain
         public T? Dados { get; private set; }
 
         // Sucesso
-        public static ResponseModel<T> Sucess(T dados, string? message)
+        public static ResponseModel<T> Success(T dados, string? message)
             => new()
             {
                 Sucesso = true,
-                Mensagem = message,
+                Mensagem = message ?? string.Empty,
                 Dados = dados,
                 
             };

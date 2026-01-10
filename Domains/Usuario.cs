@@ -1,5 +1,4 @@
 using System.ComponentModel.DataAnnotations;
-using Tarefas.API.Secutity;
 
 namespace Tarefas.API.Domain
 {
@@ -13,8 +12,8 @@ namespace Tarefas.API.Domain
     {
         [Key]
         public int IdUsuario { get; private set; }
-        public string NmLogin { get; private set; }
-        public string SenhaHash { get; private set; }
+        public string NmLogin { get; private set; } = string.Empty;
+        public string SenhaHash { get; private set; } = string.Empty;
         public bool Ativo { get; private set; } = true;
         public TipoRole Permissao { get; private set; }
         public DateTime DataCriacao { get; init; }
@@ -34,14 +33,14 @@ namespace Tarefas.API.Domain
 
         public void AlterarLogin(string? nmLogin, string? senha)
         {
+            if (string.IsNullOrWhiteSpace(nmLogin) && string.IsNullOrWhiteSpace(senha))
+                throw new ArgumentException("É necessário fornecer pelo menos o login ou a senha para alteração.");
+
             if (!string.IsNullOrWhiteSpace(nmLogin))
                 NmLogin = nmLogin;
 
             if (!string.IsNullOrWhiteSpace(senha))
                 SenhaHash = senha;
-
-            if (!string.IsNullOrWhiteSpace(nmLogin) && !string.IsNullOrWhiteSpace(senha))
-                throw new ArgumentNullException("Não é possivel alterar os dados de login ou senha, sem nenhuma informação.");
         }
 
         public void Ativar()
@@ -51,17 +50,17 @@ namespace Tarefas.API.Domain
 
         public void Inativar()
         {
-            verificaInatividade();
+            VerificaInatividade();
             Ativo = false;
         }
 
         public void AlterarPermissao(TipoRole permissao)
         {
-            verificaInatividade();
+            VerificaInatividade();
             Permissao = permissao;
         }
 
-        public void verificaInatividade()
+        private void VerificaInatividade()
         {
             if (!Ativo)
                 throw new ArgumentException("Usuário inativo.");

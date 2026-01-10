@@ -30,7 +30,7 @@ namespace Tarefas.API.Domain
         public int IdTarefa { get; set; }
         public string DescTarefa { get; private set; } = string.Empty;
         public StatusTarefa Status { get; private set; }
-        public string Observacao { get; private set; }
+        public string Observacao { get; private set; } = string.Empty;
         public TipoTarefa Tipo { get; private set; } = TipoTarefa.Unica;
         public ModeloPeriodo? Periodo { get; private set; }
         public int? QtVezesParaExecucaoPeriodo { get; private set; }
@@ -103,9 +103,17 @@ namespace Tarefas.API.Domain
             DataUltimaAlteracao = DateTime.UtcNow;
         }
 
-        public void AlteraDadosTarefa(string Desc, string Obs, TipoTarefa tp)
+        public void AlteraDadosTarefa(string? desc, string? obs, TipoTarefa? tipo)
         {
-            // Ainda vou definir os dados que serão atualizados aqui.
+            if (!string.IsNullOrWhiteSpace(desc))
+                DescTarefa = desc;
+
+            if (obs != null)
+                Observacao = obs;
+
+            if (tipo.HasValue)
+                Tipo = tipo.Value;
+
             DataUltimaAlteracao = DateTime.UtcNow;
         }
 
@@ -153,9 +161,6 @@ namespace Tarefas.API.Domain
                 QtVezesExecutadaPeriodo++;
                 DataExecutada = agora;
                 DataUltimaAlteracao = agora;
-
-                DataExecutada = DateTime.UtcNow;
-                DataUltimaAlteracao = DateTime.UtcNow;
             }
         }
         private bool PeriodoMudou(DateTime ultimaExecucao, DateTime agora)

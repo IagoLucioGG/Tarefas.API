@@ -5,7 +5,7 @@ using Tarefas.API.Interface;
 using Microsoft.EntityFrameworkCore;
 using Tarefas.API.Exceptions;
 
-namespace Tarefas.API.Aplication
+namespace Tarefas.API.Application
 {
     public class TarefaAplication(AppDbContext context) : ITarefaAplication
     {
@@ -16,9 +16,9 @@ namespace Tarefas.API.Aplication
             var novaTarefa = new Tarefa(dto.DescTarefa, dto.Observacao ?? "", dto.DataParaExecucao, dto.DataExecutada, dto.Tipo, dto.QtVezesParaExecucaoPeriodo, dto.Periodo);
 
             await _context.Tarefas.AddAsync(novaTarefa);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-            return ResponseModel<Tarefa>.Sucess(novaTarefa, "Tarefa Cadastrada com sucesso.");
+            return ResponseModel<Tarefa>.Success(novaTarefa, "Tarefa Cadastrada com sucesso.");
         }
 
         public async Task<ResponseModel<Tarefa>> ExecutarTarefa(int idTarefa)
@@ -29,9 +29,9 @@ namespace Tarefas.API.Aplication
 
             tarefaExecutada.ExecutarTarefa();
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-            return ResponseModel<Tarefa>.Sucess(tarefaExecutada, "Tarefa executada com sucesso.");
+            return ResponseModel<Tarefa>.Success(tarefaExecutada, "Tarefa executada com sucesso.");
 
         }
 
@@ -43,9 +43,9 @@ namespace Tarefas.API.Aplication
 
             tarefaInativada.InativaTarefa();
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-            return ResponseModel<Tarefa>.Sucess(tarefaInativada, "A tarefa foi inativada com sucesso.");
+            return ResponseModel<Tarefa>.Success(tarefaInativada, "A tarefa foi inativada com sucesso.");
         }
 
         public async Task<ResponseModel<Tarefa>> ConsultarTarefaPorId(int idTarefa)
@@ -54,7 +54,7 @@ namespace Tarefas.API.Aplication
             if (tarefa == null)
                 throw new NotFoundException($"Não foi encontrado nenhuma tarefa com este Id {idTarefa}");
 
-            return ResponseModel<Tarefa>.Sucess(tarefa, "Tarefa encontrada com sucesso.");
+            return ResponseModel<Tarefa>.Success(tarefa, "Tarefa encontrada com sucesso.");
         }
 
         public async Task<ResponseModel<Tarefa>> AtivaTarefa(int idTarefa)
@@ -65,9 +65,9 @@ namespace Tarefas.API.Aplication
 
             tarefaAtivada.AtivaTarefa();
 
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
-            return ResponseModel<Tarefa>.Sucess(tarefaAtivada, "A tarefa foi Ativada com sucesso.");
+            return ResponseModel<Tarefa>.Success(tarefaAtivada, "A tarefa foi Ativada com sucesso.");
         }
 
         public async Task<ResponseModel<List<Tarefa>>> FiltrarTarefasAsync(TarefaFiltroDTO dto)
@@ -99,7 +99,7 @@ namespace Tarefas.API.Aplication
 
             var tarefas = await query.ToListAsync();
 
-            return ResponseModel<List<Tarefa>>.Sucess(tarefas, "Tarefas filtradas com sucesso.");
+            return ResponseModel<List<Tarefa>>.Success(tarefas, "Tarefas filtradas com sucesso.");
         }
     }
 }

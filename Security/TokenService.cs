@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.IdentityModel.Tokens;
 using Tarefas.API.Domain;
 
-namespace Tarefas.API.Secutity
+namespace Tarefas.API.Security
 {
     public class TokenService(IConfiguration configuration)
     {
@@ -20,7 +20,9 @@ namespace Tarefas.API.Secutity
             };
 
             var secret = _configuration["ChaveSeguranca"];
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret ?? "CHAVE_SUPER_SECRETA_AQUI"));
+            if (string.IsNullOrWhiteSpace(secret))
+                throw new InvalidOperationException("ChaveSeguranca não configurada no appsettings.json");
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(secret));
 
             var credentials = new SigningCredentials(
                 key,

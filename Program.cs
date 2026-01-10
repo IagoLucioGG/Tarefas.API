@@ -2,11 +2,11 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
-using Tarefas.API.Aplication;
+using Tarefas.API.Application;
 using Tarefas.API.Data;
 using Tarefas.API.Interface;
 using Tarefas.API.Middleware;
-using Tarefas.API.Secutity;
+using Tarefas.API.Security;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
@@ -25,8 +25,10 @@ builder.Services.AddDbContext<AppDbContext>(options =>
     )
 );
 
-var Chave = builder.Configuration.GetValue<string>("ChaveSeguranca");
-var key = Encoding.ASCII.GetBytes(Chave ?? "CHAVE_SUPER_SECRETA_AQUI");
+var chave = builder.Configuration.GetValue<string>("ChaveSeguranca");
+if (string.IsNullOrWhiteSpace(chave))
+    throw new InvalidOperationException("ChaveSeguranca não configurada no appsettings.json");
+var key = Encoding.ASCII.GetBytes(chave);
 builder.Services
     .AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
@@ -49,15 +51,11 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseMiddleware<ExceptionMiddleware>();
+app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-
-
-
+app.UseMiddleware<ExceptionMiddleware>();
 app.MapControllers();
-
-app.UseHttpsRedirection();
 
 
 

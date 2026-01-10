@@ -3,9 +3,10 @@ using Tarefas.API.Data;
 using Tarefas.API.Domain;
 using Tarefas.API.DTO;
 using Tarefas.API.Exceptions;
-using Tarefas.API.Secutity;
+using Tarefas.API.Interface;
+using Tarefas.API.Security;
 
-namespace Tarefas.API.Aplication
+namespace Tarefas.API.Application
 {
     public class AuthAplication : IAuthAplication
 {
@@ -43,7 +44,7 @@ namespace Tarefas.API.Aplication
 
         var token = _tokenService.GerarToken(usuario);
 
-        return ResponseModel<string>.Sucess(token, "Login realizado com sucesso");
+        return ResponseModel<string>.Success(token, "Login realizado com sucesso");
     }
 }
 

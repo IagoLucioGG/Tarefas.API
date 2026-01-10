@@ -1,7 +1,7 @@
 using Microsoft.AspNetCore.Identity;
 using Tarefas.API.Domain;
 
-namespace Tarefas.API.Secutity
+namespace Tarefas.API.Security
 {
     public class PasswordService
 {

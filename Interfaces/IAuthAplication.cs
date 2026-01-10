@@ -1,7 +1,10 @@
 using Tarefas.API.Domain;
 using Tarefas.API.DTO;
 
-public interface IAuthAplication
+namespace Tarefas.API.Interface
 {
-    Task<ResponseModel<string>> LoginAsync(LoginRequestDTO dto);
+    public interface IAuthAplication
+    {
+        Task<ResponseModel<string>> LoginAsync(LoginRequestDTO dto);
+    }
 }
