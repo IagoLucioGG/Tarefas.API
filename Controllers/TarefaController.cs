@@ -33,7 +33,7 @@ namespace Tarefas.API.Controllers
             return Ok(response);
         }
 
-        [Authorize(Roles ="Comun")]
+        [Authorize(Roles = "Comum")]
         [HttpGet]
         public async Task<ActionResult> Get([FromQuery] TarefaFiltroDTO dto)
         {
@@ -44,7 +44,7 @@ namespace Tarefas.API.Controllers
             return Ok(response);
         }
 
-        [Authorize(Roles ="Comun")]
+        [Authorize(Roles = "Comum")]
         [HttpPatch("{idTarefa}")]
         public async Task<ActionResult> Patch(int idTarefa)
         {
